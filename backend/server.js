@@ -5,7 +5,7 @@ const http = require("http");
 // 2. Import Socket.io Server class
 const { Server } = require("socket.io"); // This class will manage all real-time WebSocket connections.
 
-const { protect } = require("./middleware/socketAuth");
+const { protectSocket } = require("./middleware/socketAuth");
 
 const chatSocket = require("./sockets/chatSocket");
 
@@ -20,10 +20,14 @@ app.use(cors());
 
 // --- Import routes ---
 const authRoutes = require("./routes/authRoutes");
+const userRoutes = require("./routes/userRoutes");
+const messageRoutes = require("./routes/messageRoutes");
 
 // --- Define Routes ---
 // All routes starting with /api/auth will be handled by authRoutes
 app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/messages/", messageRoutes);
 
 // 3. Create an HTTP server that wraps Express
 const server = http.createServer(app);
@@ -37,7 +41,7 @@ const io = new Server(server, {
   },
 });
 
-io.use(protect); // ← Apply authentication middleware to all Socket connections
+io.use(protectSocket); // ← Apply authentication middleware to all Socket connections
 
 chatSocket(io);
 

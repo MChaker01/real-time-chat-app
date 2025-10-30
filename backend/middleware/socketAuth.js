@@ -4,10 +4,10 @@ const jwt = require("jsonwebtoken");
 /**
  ** Route Protection Middleware
  ** This middleware checks if the user is authenticated before accessing a protected route.
- ** It extracts the JWT token from the Authorization header, verifies it, and attaches the user to req.
+ ** It extracts the JWT token from the handshake.auth, verifies it, and attaches the user to socket.
  **/
 
-const protect = async (socket, next) => {
+const protectSocket = async (socket, next) => {
   // 1. Extract token from socket.handshake.auth.token
   const token = socket.handshake.auth.token;
 
@@ -39,4 +39,4 @@ const protect = async (socket, next) => {
   return next(new Error("Unauthorized, no token"));
 };
 
-module.exports = { protect };
+module.exports = { protectSocket };
