@@ -5,6 +5,10 @@ const http = require("http");
 // 2. Import Socket.io Server class
 const { Server } = require("socket.io"); // This class will manage all real-time WebSocket connections.
 
+const { protect } = require("./middleware/socketAuth");
+
+const chatSocket = require("./sockets/chatSocket");
+
 const cors = require("cors");
 require("dotenv").config();
 
@@ -32,6 +36,10 @@ const io = new Server(server, {
     method: ["GET", "POST"],
   },
 });
+
+io.use(protect); // ← Apply authentication middleware to all Socket connections
+
+chatSocket(io);
 
 const DB_URI = process.env.DB_URI;
 
