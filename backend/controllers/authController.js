@@ -89,7 +89,11 @@ const login = async (req, res) => {
 
     // 3. Check if the user exists AND if the password is correct
     // bcrypt.compare() compares the plaintext password with the stored hash
-    if (userExists && bcrypt.compare(password, userExists.password)) {
+    const comparePasswords = await bcrypt.compare(
+      password,
+      userExists.password
+    );
+    if (userExists && comparePasswords) {
       // 4. Connection successful: generate a new token
       const token = jwt.sign({ id: userExists._id }, process.env.JWT_SECRET, {
         expiresIn: "3d",

@@ -1,0 +1,23 @@
+/* Specific to login page */
+.grid-header {
+  border-bottom: 2px solid var(--accent);
+}
+
+.login-block {
+  display: flex;
+  flex-direction: column;
+  gap: 1.3rem;
+}
+
+/* Login watermark — subtler and smaller */
+.login-block::before {
+  content: "LOG IN";
+  position: absolute;
+  top: 1rem;
+  right: 1.2rem;
+  font-size: 0.8rem;
+  letter-spacing: 1.5px;
+  color: rgba(255, 255, 255, 0.05);
+  text-transform: uppercase;
+  pointer-events: none;
+}

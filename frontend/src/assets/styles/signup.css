@@ -1,0 +1,46 @@
+.register-block {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* reduced gap between fields */
+  margin-top: 0.5rem;
+}
+
+/* Compact the overall panel for signup */
+.grid-container {
+  padding: 2rem 1.8rem; /* smaller vertical padding */
+  width: 380px; /* narrower for balance */
+}
+
+/* Slightly smaller text and input padding */
+.field label {
+  font-size: 0.8rem;
+}
+
+.field input {
+  padding: 0.55rem 0.7rem;
+  font-size: 0.95rem;
+}
+
+/* Adjust button spacing */
+.register-block .btn-submit {
+  margin-top: 0.3rem;
+  padding: 0.75rem;
+}
+
+/* Signup watermark — subtler and smaller */
+.register-block::before {
+  content: "SIGN UP";
+  position: absolute;
+  top: 1rem;
+  right: 1.2rem;
+  font-size: 0.8rem;
+  letter-spacing: 1.5px;
+  color: rgba(255, 255, 255, 0.05);
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+/* Optional: tighter footer spacing */
+.footer-note {
+  margin-top: 0.5rem;
+}
