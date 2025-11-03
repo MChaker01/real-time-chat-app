@@ -4,9 +4,14 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Chat from "./pages/Chat";
 import { useAuth } from "./context/AuthContext";
+import Spinner from "./components/Spinner";
 
 function App() {
-  const { user } = useAuth();
+  const { user, initialLoading } = useAuth();
+
+  if (initialLoading) {
+    return <Spinner />;
+  }
 
   return (
     <>

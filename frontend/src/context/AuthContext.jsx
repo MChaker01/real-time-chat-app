@@ -37,6 +37,8 @@ export const AuthProvider = ({ children }) => {
 
   const [error, setError] = useState("");
 
+  const [initialLoading, setInitialLoading] = useState(true);
+
   /**
    * Register a new user
    *
@@ -131,6 +133,8 @@ export const AuthProvider = ({ children }) => {
       setUser(user);
       // Now the user is "logged in" even after page refresh!
     }
+
+    setInitialLoading(false);
   }, []); // Empty array = run only once on mount
 
   /**
@@ -147,6 +151,7 @@ export const AuthProvider = ({ children }) => {
     user,
     isLoading,
     error,
+    initialLoading,
     setError,
     signup,
     login,
