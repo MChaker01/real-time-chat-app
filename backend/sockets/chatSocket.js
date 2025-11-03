@@ -30,6 +30,14 @@ const chatSocket = (io) => {
       isOnline: true,
     });
 
+    // Send the current list of online users to the newly connected user
+    const onlineUserIds = Array.from(onlineUsers.keys()); // Convert Map keys to array
+    socket.emit("online_users_list", onlineUserIds);
+    console.log(
+      `Sent online users list to ${socket.user.username}:`,
+      onlineUserIds
+    );
+
     // Handle incoming messages
     socket.on("send_message", async (data) => {
       // Extract receiverId and content from data
