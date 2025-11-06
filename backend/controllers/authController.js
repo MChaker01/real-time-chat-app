@@ -59,7 +59,7 @@ const signup = async (req, res) => {
       return res.status(201).json({
         username: newUser.username,
         email: newUser.email,
-        coverImage: newUser.coverImage,
+        userImage: newUser.userImage,
         token,
       });
     } else {

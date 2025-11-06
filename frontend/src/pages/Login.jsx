@@ -125,7 +125,7 @@ const Login = () => {
 
             {/* Link to register page for new users */}
             <p className="footer-note">
-              New here? <Link to="/register">Join now</Link>
+              New here? <Link to="/signup">Join now</Link>
             </p>
           </form>
         </main>

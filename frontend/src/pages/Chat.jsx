@@ -1,8 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
 import services from "../services/api";
 import UsersList from "../components/UsersList";
 import Spinner from "../components/Spinner";
+import ChatPanel from "../components/ChatPanel";
+import { useSocket } from "../context/SocketContext";
 
 const Chat = () => {
   // Get current user and logout function from AuthContext
@@ -18,6 +20,23 @@ const Chat = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const [error, setError] = useState("");
+
+  const [messages, setMessages] = useState([]);
+
+  const { socket } = useSocket();
+
+  const bottomRef = useRef(null);
+
+  const scrollToBottom = () => {
+    bottomRef.current?.scrollIntoView({
+      behavior: "smooth", // Smooth animation
+      block: "end", // Align to the end of the scroll container
+    });
+  };
+
+  const handleMessageSent = (newMessage) => {
+    setMessages((prev) => [...prev, newMessage]);
+  };
 
   /**
    * Fetch users when component mounts
@@ -45,6 +64,55 @@ const Chat = () => {
     fetchUsers();
   }, []);
 
+  useEffect(() => {
+    // Only fetch if a user is selected
+    if (selectedUser) {
+      const fetchMessages = async () => {
+        try {
+          // Call the API to get messages between current user and selectedUser
+          const data = await services.getMessages(selectedUser._id);
+          // Extract the messages array from the response and store in state
+          setMessages(data.messages);
+        } catch (error) {
+          console.error("Error while fetching previous messages.", error);
+          setError("Error while fetching previous messages.");
+        }
+      };
+
+      fetchMessages();
+    } else {
+      // If no user selected, clear messages
+      setMessages([]);
+    }
+  }, [selectedUser]); // Re-run when selectedUser changes
+
+  useEffect(() => {
+    if (socket) {
+      // Listen for 'receive_message' events
+      socket.on("receive_message", (newMessage) => {
+        console.log("📨 New message received:", newMessage);
+        // Only add message if it's part of the current conversation
+        if (selectedUser) {
+          // Check if message is from selected user or sent to selected user
+          const isFromSelectedUser = newMessage.sender._id === selectedUser._id;
+          const isToSelectedUser = newMessage.receiver._id === selectedUser._id;
+
+          if (isFromSelectedUser || isToSelectedUser) {
+            setMessages((prevMessages) => [...prevMessages, newMessage]);
+          }
+        }
+      });
+
+      return () => {
+        socket.off("receive_message");
+      };
+    }
+  }, [socket, selectedUser]);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
   if (isLoading) {
     return <Spinner />;
   }
@@ -56,7 +124,6 @@ const Chat = () => {
         <h2>Welcome, {user?.username}!</h2>
         <button onClick={logout}>Logout</button>
       </header>
-
       <div className="chat-layout">
         {/* Left sidebar: Users list */}
         <UsersList
@@ -65,15 +132,21 @@ const Chat = () => {
           onSelectUser={setSelectedUser}
         />
 
-        {/* Right panel: Chat (we'll build this later) */}
-        <div className="chat-panel">
-          {selectedUser ? (
-            <p>Chat with {selectedUser.username} - Coming soon...</p>
-          ) : (
+        {selectedUser ? (
+          // selectedUser and messages are passed as props
+          <ChatPanel
+            selectedUser={selectedUser}
+            messages={messages}
+            onMessageSent={handleMessageSent}
+            bottomRef={bottomRef}
+          />
+        ) : (
+          <div className="chat-panel-placeholder">
             <p>Select a user to start chatting</p>
-          )}
-        </div>
+          </div>
+        )}
       </div>
+      {error && <div className="chat-error">{error}</div>} {/* Display error */}
     </div>
   );
 };

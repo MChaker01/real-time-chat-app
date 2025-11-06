@@ -1,3 +1,5 @@
+/* index.css */
+
 /* ===== Base Theme ===== */
 :root {
   --bg-main: #222;
@@ -10,12 +12,28 @@
   --font-mono: "IBM Plex Mono", monospace;
 }
 
+/* Global Box Sizing Reset: This is crucial! */
+html {
+  box-sizing: border-box;
+  height: 100%; /* ADDED: Ensure html takes full height */
+}
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
 /* ===== Base Resets ===== */
 body {
   background: var(--bg-main);
   font-family: var(--font-mono);
   color: var(--text-main);
   margin: 0;
+  height: 100%; /* CHANGED: Use height: 100% instead of min-height: 100vh */
+}
+
+#root {
+  height: 100%;
 }
 
 a {
@@ -27,7 +45,7 @@ a:hover {
   opacity: 0.8;
 }
 
-/* ===== Layout Wrapper ===== */
+/* ===== Layout Wrapper (Auth forms) ===== */
 .auth-brutalist {
   display: flex;
   align-items: center;
@@ -47,7 +65,7 @@ a:hover {
   overflow: hidden;
 }
 
-/* ===== Header (Brand) ===== */
+/* ===== Header (Brand for Auth) ===== */
 .grid-header {
   border-bottom: 2px solid var(--accent);
   margin-bottom: 2rem;
@@ -116,7 +134,7 @@ a:hover {
   transform: translateY(-2px);
 }
 
-/* ===== Error & Footer ===== */
+/* ===== Error & Footer (Auth) ===== */
 .error {
   color: #ff4242;
   font-size: 0.85rem;
@@ -135,15 +153,103 @@ a:hover {
   color: var(--accent);
 }
 
-/* ===== Responsive ===== */
-@media (max-width: 500px) {
-  .grid-container {
-    width: 90%;
-    padding: 2rem 1.5rem;
-  }
+/* ===== Chat Page Layout (new styles) ===== */
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--bg-main);
+}
 
-  .brand {
-    font-size: 1.8rem;
+.chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background: #1a1a1a; /* Darker background for header */
+  border-bottom: 2px solid var(--accent);
+  color: var(--text-main);
+  height: 60px; /* Fixed height for header */
+  box-sizing: border-box; /* Include padding/border in height */
+}
+
+.chat-header h2 {
+  margin: 0;
+  font-family: var(--font-bold);
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: -0.5px;
+}
+
+.chat-header button {
+  background: var(--accent);
+  border: none;
+  padding: 0.6rem 1rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  color: #000; /* Text color for the button */
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.chat-header button:hover {
+  background: #fff06a;
+  transform: translateY(-1px);
+}
+
+.chat-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  /* This tells the single grid row to take up all available vertical space,
+     but crucially, not to grow beyond the container's boundaries. */
+  grid-template-rows: minmax(0, 1fr);
+  flex: 1; /* This makes the grid container fill space in its flex parent */
+  background: #111;
+  box-sizing: border-box;
+  overflow: hidden; /* This is a good safeguard to prevent any overflow */
+  min-height: 0;
+}
+
+.chat-layout > * {
+  min-height: 0;
+}
+
+/* Placeholder when no user is selected in ChatPanel area */
+.chat-panel-placeholder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* Take full height of its grid cell */
+  background: #1a1a1a; /* Match ChatPanel background */
+  border-left: 2px solid var(--accent); /* Match ChatPanel border */
+}
+
+.chat-panel-placeholder p {
+  color: var(--text-muted);
+  font-style: italic;
+  font-size: 1.1rem;
+}
+
+/* General chat error display */
+.chat-error {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #ff4242;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  z-index: 1000;
+  font-size: 0.9rem;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 800px) {
+  .chat-layout {
+    grid-template-columns: 1fr; /* Stack on small screens */
+    grid-template-rows: auto 1fr; /* UsersList on top, then ChatPanel below */
   }
 }
 
@@ -176,5 +282,17 @@ a:hover {
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+/* Responsive for Auth forms */
+@media (max-width: 500px) {
+  .grid-container {
+    width: 90%;
+    padding: 2rem 1.5rem;
+  }
+
+  .brand {
+    font-size: 1.8rem;
   }
 }

@@ -75,7 +75,7 @@ export const SocketProvider = ({ children }) => {
 
       return () => {
         socket.off("user_status");
-        socket.off("online_user_list");
+        socket.off("online_users_list");
       };
     }
   }, [socket]);

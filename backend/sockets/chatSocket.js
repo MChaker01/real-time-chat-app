@@ -43,11 +43,16 @@ const chatSocket = (io) => {
       // Extract receiverId and content from data
       const { receiverId, content } = data;
       // Save the message to MongoDB using Message.create()
-      const messageData = await Message.create({
+      const newMessage = await Message.create({
         sender: socket.user._id,
         receiver: receiverId,
         content,
       });
+      // Populate sender and receiver with user details before emitting
+      const messageData = await Message.findById(newMessage._id)
+        .populate("sender", "username _id")
+        .populate("receiver", "username _id");
+
       // Find receiver's socket ID from onlineUsers Map
       const receiverSocketId = onlineUsers.get(data.receiverId);
       // If receiver is online, emit 'receive_message' to their socket

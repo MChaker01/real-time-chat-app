@@ -1,12 +1,14 @@
+/* users-list.css */
+
 /* ===== Sidebar Layout ===== */
 .users-sidebar {
-  width: 260px;
   background: #1c1c1c;
   border-right: 2px solid var(--accent);
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 60px);
   position: relative;
+  box-sizing: border-box;
+  /* REMOVED: height: 100%; */ /* Rely on grid's default stretch behavior */
 }
 
 .sidebar-title {
@@ -18,6 +20,10 @@
   border-bottom: 2px solid var(--accent);
   background: #2b2b2b;
   color: var(--accent);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
 }
 
 /* ===== User List Scroll Area ===== */
@@ -27,6 +33,9 @@
   padding: 0.5rem 0;
   scrollbar-width: thin;
   scrollbar-color: var(--accent) transparent;
+  box-sizing: border-box;
+  /* Crucial for flex items with flex-grow and overflow */
+  min-height: 0;
 }
 
 .users-scroll::-webkit-scrollbar {
@@ -43,6 +52,7 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   cursor: pointer;
   transition: background 0.2s ease, transform 0.2s ease;
+  box-sizing: border-box;
 }
 
 .user-item:hover {
@@ -50,8 +60,8 @@
 }
 
 .user-item.selected {
-  background: var(--accent);
-  color: #000;
+  background: var(--bg-panel);
+  color: #fff;
   font-weight: 700;
   transform: translateX(2px);
 }
@@ -91,21 +101,26 @@
 /* ===== Responsive ===== */
 @media (max-width: 800px) {
   .users-sidebar {
-    width: 100%;
-    height: auto;
+    width: 100%; /* Takes full width of the top row on mobile */
+    height: auto; /* Height adapts to content */
     border-right: none;
     border-bottom: 2px solid var(--accent);
   }
 
   .users-scroll {
     display: flex;
-    overflow-x: auto;
+    overflow-x: auto; /* Allows horizontal scrolling for users */
     padding: 0.5rem;
+    max-height: 150px; /* Limit height of scrollable users list on mobile */
   }
 
   .user-item {
     min-width: 150px;
     border-bottom: none;
     border-right: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  /* Remove transform for horizontal selection on mobile */
+  .user-item.selected {
+    transform: none;
   }
 }
