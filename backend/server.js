@@ -16,7 +16,12 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
+  })
+);
 
 // --- Import routes ---
 const authRoutes = require("./routes/authRoutes");
@@ -36,7 +41,7 @@ const server = http.createServer(app);
 // Socket.io needs to attach itself to an HTTP server to handle WebSocket connections.
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173", // React dev server.
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
     methods: ["GET", "POST"],
   },
 });
