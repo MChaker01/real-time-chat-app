@@ -17,11 +17,13 @@ export const SocketProvider = ({ children }) => {
   // Example: ["user123", "user456", "user789"]
   const [onlineUsers, setOnlineUsers] = useState([]);
 
+  const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "http://localhost:3000";
+
   // Connect/disconnect socket based on user login status
   useEffect(() => {
     if (user && user.token) {
       // Connect to Socket.io with token
-      const newSocket = io("http://localhost:3000", {
+      const newSocket = io(SOCKET_URL, {
         auth: { token: user.token },
       });
 

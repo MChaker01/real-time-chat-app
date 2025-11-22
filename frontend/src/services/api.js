@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // Base URL for all API requests
-const API_URL = "http://localhost:3000/api";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
 
 /**
  * Helper function to get the Authorization header configuration
